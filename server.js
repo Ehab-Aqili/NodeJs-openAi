@@ -19,7 +19,9 @@ app.use(cors());
 app.use(apiLimiter);
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey:
+    process.env.OPENAI_API_KEY ||
+    "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",
 });
 
 app.get("/generate-completion", async (req, res) => {
