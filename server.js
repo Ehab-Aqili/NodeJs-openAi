@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const OpenAI = require("openai");
 const rateLimit = require("express-rate-limit");
+const Tesseract = require("tesseract.js");
 
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
@@ -46,6 +47,30 @@ app.get("/generate-completion", async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/extract-text", (req, res) => {
+  try {
+    console.log("req.body", req.body);
+    // Extract base64-encoded image data from the request body
+    const base64Data = req.body.image;
+
+    // Perform OCR on the image
+    Tesseract.recognize(Buffer.from(base64Data, "base64"), "eng", {
+      logger: (info) => console.log(info),
+    })
+      .then(({ data: { text } }) => {
+        // Respond with the extracted text
+        res.json({ extractedText: text });
+      })
+      .catch((error) => {
+        console.error("Error processing image:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      });
+  } catch (error) {
+    console.error("Error processing image:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
