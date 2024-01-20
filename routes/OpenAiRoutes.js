@@ -1,6 +1,13 @@
 const express = require("express");
-const { OpenAiController } = require("../controllers/OpenAiController");
+const {
+  GrammarCorrection,
+  ImageExtract,
+  SpeechToText,
+} = require("../controller/OpenAiController");
 
-const router = express.Router();
+const OpenAiRouter = express.Router();
+OpenAiRouter.post("/generate-completion", GrammarCorrection);
+OpenAiRouter.post("/image-extract", ImageExtract);
+OpenAiRouter.get("/speech-to-text", SpeechToText);
 
-module.exports = router;
+module.exports = OpenAiRouter;
