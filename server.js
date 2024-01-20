@@ -5,6 +5,8 @@ const OpenAI = require("openai");
 const fs = require("fs");
 const rateLimit = require("express-rate-limit");
 const Tesseract = require("tesseract.js");
+const swaggerSpec = require("./swaggerConfgr");
+const swaggerUi = require("swagger-ui-express");
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -23,7 +25,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-app.get("/generate-completion", async (req, res) => {
+app.post("/generate-completion", async (req, res) => {
   const { userMessage } = req.body;
 
   try {
@@ -96,6 +98,8 @@ app.post("/extract-text", (req, res) => {
 app.get("/", (req, res) => {
   res.send("Welcome to my server!");
 });
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://127.0.0.1:${PORT}`);
