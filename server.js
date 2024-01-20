@@ -7,7 +7,7 @@ const swaggerUi = require("swagger-ui-express");
 const OpenAiRouter = require("./routes/OpenAiRoutes");
 
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 1 * 60 * 1000,
   max: 10,
   message: "Too many requests from this IP, please try again later.",
 });
