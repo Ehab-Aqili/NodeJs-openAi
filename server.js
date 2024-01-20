@@ -2,11 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const OpenAI = require("openai");
+const fs = require("fs");
 const rateLimit = require("express-rate-limit");
 const Tesseract = require("tesseract.js");
 
 const apiLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
+  windowMs: 15 * 60 * 1000,
   max: 10,
   message: "Too many requests from this IP, please try again later.",
 });
@@ -19,9 +20,7 @@ app.use(cors());
 app.use(apiLimiter);
 
 const openai = new OpenAI({
-  apiKey:
-    process.env.OPENAI_API_KEY ||
-    "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",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 app.get("/generate-completion", async (req, res) => {
@@ -47,6 +46,23 @@ app.get("/generate-completion", async (req, res) => {
     });
 
     res.json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Speech To Text Endpoint
+
+app.post("/speech-to-text", async (req, res) => {
+  // const { userVoice } = req.body;
+
+  try {
+    const response = await openai.audio.transcriptions.create({
+      file: fs.createReadStream("10-seconds-39474.mp3"),
+      model: "whisper-1",
+    });
+    res.json(response.text);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
