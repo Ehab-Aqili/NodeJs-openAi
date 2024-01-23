@@ -8,6 +8,6 @@ const {
 const OpenAiRouter = express.Router();
 OpenAiRouter.post("/generate-completion", GrammarCorrection);
 OpenAiRouter.post("/image-extract", ImageExtract);
-OpenAiRouter.get("/speech-to-text", SpeechToText);
+OpenAiRouter.post("/speech-to-text", SpeechToText);
 
 module.exports = OpenAiRouter;

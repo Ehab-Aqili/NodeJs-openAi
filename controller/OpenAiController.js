@@ -67,18 +67,62 @@ const ImageExtract = async (req, res) => {
   }
 };
 
+// const SpeechToText = async (req, res) => {
+//   try {
+//     const response = await openai.audio.transcriptions.create({
+//       file: fs.createReadStream("10-seconds-39474.mp3"),
+//       model: "whisper-1",
+//     });
+//     res.json(response.text);
+//     fs.unlink("10-seconds-39474.mp3", (err) => {
+//       if (err) {
+//         console.error("Error deleting file:", err);
+//       } else {
+//         console.log("File deleted successfully");
+//       }
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
+
 const SpeechToText = async (req, res) => {
   try {
+    // Generate a unique filename for the temporary storage
+    const tempFilePath = `temp_${Date.now()}.mp3`;
+
+    // Save the file from the request to the temporary path
+    await new Promise((resolve, reject) => {
+      const fileStream = fs.createWriteStream(tempFilePath);
+      req.pipe(fileStream);
+      fileStream.on("finish", resolve);
+      fileStream.on("error", reject);
+    });
+
+    // Perform transcription
     const response = await openai.audio.transcriptions.create({
-      file: fs.createReadStream("10-seconds-39474.mp3"),
+      file: fs.createReadStream(tempFilePath),
       model: "whisper-1",
     });
+
+    // Send the response to the client
     res.json(response.text);
+
+    // Remove the temporary file after sending the response
+    fs.unlink(tempFilePath, (err) => {
+      if (err) {
+        console.error("Error deleting temporary file:", err);
+      } else {
+        console.log("Temporary file deleted successfully");
+      }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 module.exports = {
   GrammarCorrection,

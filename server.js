@@ -6,18 +6,18 @@ const swaggerSpec = require("./swaggerConfgr");
 const swaggerUi = require("swagger-ui-express");
 const OpenAiRouter = require("./routes/OpenAiRoutes");
 
-const apiLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 10,
-  message: "Too many requests from this IP, please try again later.",
-});
+// const apiLimiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 10,
+//   message: "Too many requests from this IP, please try again later.",
+// });
 dotenv.config({ path: "./.env" });
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(apiLimiter);
+// app.use(apiLimiter);
 
 app.use("/api", OpenAiRouter);
 

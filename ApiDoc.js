@@ -69,13 +69,50 @@
  *                   type: string
  */
 /**
+//  * @swagger
+//  * /api/speech-to-text:
+//  *   get:
+//  *     summary: Convert Speech to Text
+//  *     description: Use OpenAI to transcribe audio to text
+//  *     tags:
+//  *       - Grammar
+//  *     responses:
+//  *       200:
+//  *         description: Text transcription successful
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: string
+//  *       500:
+//  *         description: Internal Server Error
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               type: object
+//  *               properties:
+//  *                 error:
+//  *                   type: string
+//  */
+
+
+/**
  * @swagger
  * /api/speech-to-text:
- *   get:
+ *   post:  # Change from 'get' to 'post'
  *     summary: Convert Speech to Text
  *     description: Use OpenAI to transcribe audio to text
  *     tags:
  *       - Grammar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:  # Specify the content type for file uploads
+ *           schema:
+ *             type: object
+ *             properties:
+ *               audioFile:
+ *                 type: string
+ *                 format: binary  # Indicate that the content is binary (file)
  *     responses:
  *       200:
  *         description: Text transcription successful
