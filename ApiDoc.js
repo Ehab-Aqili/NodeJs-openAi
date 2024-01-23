@@ -35,19 +35,20 @@
  * /api/image-extract:
  *   post:
  *     summary: Extract Text from Image
- *     description: Perform OCR on a base64-encoded image to extract text
+ *     description: Perform OCR on an image to extract text
  *     tags:
  *       - Grammar
  *     requestBody:
- *       description: Base64-encoded image data
+ *       description: Form data containing an image file
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:  # Specify the content type for file uploads
  *           schema:
  *             type: object
  *             properties:
  *               image:
  *                 type: string
+ *                 format: binary  # Indicate that the content is binary (file)
  *     responses:
  *       200:
  *         description: Text extracted successfully
@@ -68,6 +69,7 @@
  *                 error:
  *                   type: string
  */
+
 /**
 //  * @swagger
 //  * /api/speech-to-text:
@@ -93,7 +95,6 @@
 //  *                 error:
 //  *                   type: string
 //  */
-
 
 /**
  * @swagger

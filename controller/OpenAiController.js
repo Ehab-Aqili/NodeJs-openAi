@@ -43,29 +43,29 @@ const GrammarCorrection = async (req, res) => {
   }
 };
 
-const ImageExtract = async (req, res) => {
-  try {
-    console.log("req.body", req.body);
-    // Extract base64-encoded image data from the request body
-    const base64Data = req.body.image;
+// const ImageExtract = async (req, res) => {
+//   try {
+//     console.log("req.body", req.body);
+//     // Extract base64-encoded image data from the request body
+//     const base64Data = req.body.image;
 
-    // Perform OCR on the image
-    Tesseract.recognize(Buffer.from(base64Data, "base64"), "eng", {
-      logger: (info) => console.log(info),
-    })
-      .then(({ data: { text } }) => {
-        // Respond with the extracted text
-        res.json({ extractedText: text });
-      })
-      .catch((error) => {
-        console.error("Error processing image:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-      });
-  } catch (error) {
-    console.error("Error processing image:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+//     // Perform OCR on the image
+//     Tesseract.recognize(Buffer.from(base64Data, "base64"), "eng", {
+//       logger: (info) => console.log(info),
+//     })
+//       .then(({ data: { text } }) => {
+//         // Respond with the extracted text
+//         res.json({ extractedText: text });
+//       })
+//       .catch((error) => {
+//         console.error("Error processing image:", error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//       });
+//   } catch (error) {
+//     console.error("Error processing image:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// };
 
 // const SpeechToText = async (req, res) => {
 //   try {
@@ -86,6 +86,32 @@ const ImageExtract = async (req, res) => {
 //     res.status(500).json({ error: "Internal Server Error" });
 //   }
 // };
+
+
+const ImageExtract = async (req, res) => {
+  try {
+    // Extract base64-encoded image data from the request file
+    const base64Data = req.file.buffer.toString("base64");
+
+    // Perform OCR on the image
+    Tesseract.recognize(Buffer.from(base64Data, "base64"), "eng", {
+      logger: (info) => console.log(info),
+    })
+      .then(({ data: { text } }) => {
+        // Respond with the extracted text
+        res.json({ extractedText: text });
+      })
+      .catch((error) => {
+        console.error("Error processing image:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      });
+  } catch (error) {
+    console.error("Error processing image:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 
 const SpeechToText = async (req, res) => {
   try {
