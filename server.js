@@ -5,7 +5,7 @@ const rateLimit = require("express-rate-limit");
 const swaggerSpec = require("./swaggerConfgr");
 const swaggerUi = require("swagger-ui-express");
 const OpenAiRouter = require("./routes/OpenAiRoutes");
-
+const path = require("path");
 // const apiLimiter = rateLimit({
 //   windowMs: 15 * 60 * 1000,
 //   max: 10,
@@ -21,8 +21,9 @@ app.use(cors());
 
 app.use("/api", OpenAiRouter);
 
-app.get("/", (req, res) => {
-  res.send("Welcome to my server!");
+app.use(express.static(path.join(__dirname, "./File")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./File/index.html"));
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
